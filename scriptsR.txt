@@ -1,0 +1,10 @@
+library("gmodels")
+DisplayedQuestions <- read.csv("/home/lenin/workspace/analisequantitativamestrado/displayedQuestions.csv")
+freq_Users_DisplayedQuestions <- data.frame(table(DisplayedQuestions$user_configuration_id))
+users <- read.csv("/home/lenin/workspace/analisequantitativamestrado/users.csv")
+participants <- subset(users, id %in% freq_Users_DisplayedQuestions$Var1)
+freq_Configuration_DisplayedQuestions <- data.frame(table(participants$configuration_id))
+participants$didHeShare <- FALSE
+participants$didHeShare[participants$id %in% c(191,170,24,57,96,48,105,3,151)] <- TRUE
+participants$didHeShare[participants$id %in% c(83,147,41)] <- TRUE
+analysis <- CrossTable(participants$configuration_id, participants$didHeShare, fisher = TRUE)
