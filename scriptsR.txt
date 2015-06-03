@@ -7,4 +7,50 @@ freq_Configuration_DisplayedQuestions <- data.frame(table(participants$configura
 participants$didHeShare <- FALSE
 participants$didHeShare[participants$id %in% c(191,170,24,57,96,48,105,3,151)] <- TRUE
 participants$didHeShare[participants$id %in% c(83,147,41)] <- TRUE
-analysis <- CrossTable(participants$configuration_id, participants$didHeShare, fisher = TRUE)
+analysis <- CrossTable(participants$configuration_id, participants$didHeShare, fisher = TRUE, chisq = FALSE,  sresid = TRUE, format = "SPSS")
+
+msgIWhoDidShare <- length(subset(participants$id, participants$didHeShare == TRUE & participants$configuration_id == 1))
+msgIIWhoDidShare <- length(subset(participants$id, participants$didHeShare == TRUE & participants$configuration_id == 2))
+msgIIIWhoDidShare <- length(subset(participants$id, participants$didHeShare == TRUE & participants$configuration_id == 3))
+slices <- c(msgIWhoDidShare, msgIIWhoDidShare, msgIIIWhoDidShare)
+lbls <- c("Mensagem I (", "Mensagem II (", "Mensagem III (")
+pct <- round(slices/sum(slices)*100)
+lbls <- paste(lbls, pct) 
+lbls <- paste(lbls,"%)",sep="") 
+pie(slices,labels = lbls, col=rainbow(length(lbls)),main="Usuários que compartilharam.")
+
+msgIWhoDidntShare <- length(subset(participants$id, participants$didHeShare == FALSE & participants$configuration_id == 1))
+msgIIWhoDidntShare <- length(subset(participants$id, participants$didHeShare == FALSE & participants$configuration_id == 2))
+msgIIIWhoDidntShare <- length(subset(participants$id, participants$didHeShare == FALSE & participants$configuration_id == 3))
+slices <- c(msgIWhoDidntShare, msgIIWhoDidntShare, msgIIIWhoDidntShare)
+lbls <- c("Mensagem I (", "Mensagem II (", "Mensagem III (")
+pct <- round(slices/sum(slices)*100)
+lbls <- paste(lbls, pct) 
+lbls <- paste(lbls,"%)",sep="") 
+pie(slices,labels = lbls, col=rainbow(length(lbls)),main="Usuários que não compartilharam.")
+
+slices <- c(msgIWhoDidShare, msgIWhoDidntShare)
+lbls <- c("Compartilharam (", "Não compartilharam (")
+pct <- round(slices/sum(slices)*100)
+lbls <- paste(lbls, pct) 
+lbls <- paste(lbls,"%)",sep="") 
+pie(slices,labels = lbls, col=rainbow(length(lbls)),main="Usuários que leram a mensagem I.")
+
+slices <- c(msgIIWhoDidShare, msgIIWhoDidntShare)
+lbls <- c("Compartilharam (", "Não compartilharam (")
+pct <- round(slices/sum(slices)*100)
+lbls <- paste(lbls, pct) 
+lbls <- paste(lbls,"%)",sep="") 
+pie(slices,labels = lbls, col=rainbow(length(lbls)),main="Usuários que leram a mensagem II.")
+
+slices <- c(msgIIIWhoDidShare, msgIIIWhoDidntShare)
+lbls <- c("Compartilharam (", "Não compartilharam (")
+pct <- round(slices/sum(slices)*100)
+lbls <- paste(lbls, pct) 
+lbls <- paste(lbls,"%)",sep="") 
+pie(slices,labels = lbls, col=rainbow(length(lbls)),main="Usuários que leram a mensagem III.")
+
+counts <- table(participants$didHeShare, participants$configuration_id)
+barplot(counts, main="Distribuição da quantidade de compartilhamentos\n de acordo com a mensagem visualizada",
+        xlab="Mensagem visualizada", col=c("darkblue","red"),
+        legend = (c("Compartilharam", "Não compartilharam")), beside=TRUE, args.legend = list(x = "top", cex = 0.65))
